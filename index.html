@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#050b14">
+    <title>HKRfinance - Premium Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- REAL-TIME HEADER -->
+        <div class="realtime-header">
+            <div class="datetime">
+                <span id="realTimeClock">00:00:00</span>
+                <span id="realTimeDate">Loading...</span>
+            </div>
+            <div class="app-badge">💰 HKR<span>FINANCE</span></div>
+        </div>
+
+        <!-- PAGE 1: MAIN DASHBOARD -->
+        <div id="page-harian" class="page active">
+            <div class="premium-card main-balance">
+                <p class="card-label">💵 Total Balance</p>
+                <h1 id="saldoAktif" class="animate-number">Rp 0</h1>
+                <div class="card-footer">
+                    <div class="sub-stat"><span>💸 Cash</span><p id="saldoCash" class="stat-value animate-number">Rp 0</p></div>
+                    <div class="sub-stat"><span>📱 Digital</span><p id="saldoDigital" class="stat-value animate-number">Rp 0</p></div>
+                </div>
+            </div>
+
+            <div class="date-filter-bar">
+                <div class="filter-label">📅 Pilih Tanggal Aliran Dana</div>
+                <input type="date" id="dateFilter" class="date-input-mobile">
+                <button class="btn-today" onclick="resetToToday()">🔄 Hari Ini</button>
+            </div>
+
+            <div class="premium-card daily-summary">
+                <div class="card-header-row">
+                    <p class="card-label">📊 Aliran Dana</p>
+                    <p class="card-day" id="dailyDayName">-</p>
+                </div>
+                <p class="card-date" id="dailyDate">-</p>
+                <div class="daily-stats">
+                    <div class="daily-item"><span class="daily-label">💰 Pemasukan</span><p id="dailyMasuk" class="daily-value positive animate-number">+Rp 0</p></div>
+                    <div class="daily-item"><span class="daily-label">💸 Pengeluaran</span><p id="dailyKeluar" class="daily-value negative animate-number">-Rp 0</p></div>
+                    <div class="daily-item total"><span class="daily-label">📈 Saldo Tanggal Ini</span><p id="dailyNet" class="daily-value animate-number">Rp 0</p></div>
+                </div>
+            </div>
+
+            <div class="premium-card weekly-summary">
+                <div class="card-header-row">
+                    <p class="card-label">📅 Minggu Ini</p>
+                    <p class="card-week" id="weeklyRange">-</p>
+                </div>
+                <div class="weekly-stats">
+                    <div class="weekly-item"><span class="weekly-label">💰 Total Pemasukan</span><p id="weeklyMasuk" class="weekly-value positive animate-number">+Rp 0</p></div>
+                    <div class="weekly-item"><span class="weekly-label">💸 Total Pengeluaran</span><p id="weeklyKeluar" class="weekly-value negative animate-number">-Rp 0</p></div>
+                    <div class="weekly-item total"><span class="weekly-label">📊 Saldo Minggu Ini</span><p id="weeklyNet" class="weekly-value animate-number">Rp 0</p></div>
+                </div>
+            </div>
+
+            <div class="premium-card monthly-summary">
+                <div class="card-header-row">
+                    <p class="card-label">📆 Bulan Ini</p>
+                    <p class="card-month" id="monthlyName">-</p>
+                </div>
+                <div class="monthly-stats">
+                    <div class="monthly-item"><span class="monthly-label">💵 Total Pemasukan</span><p id="monthlyMasuk" class="monthly-value positive animate-number">+Rp 0</p></div>
+                    <div class="monthly-item"><span class="monthly-label">💸 Total Pengeluaran</span><p id="monthlyKeluar" class="monthly-value negative animate-number">-Rp 0</p></div>
+                    <div class="monthly-item total"><span class="monthly-label">💳 Saldo Bulan Ini</span><p id="monthlyNet" class="monthly-value animate-number">Rp 0</p></div>
+                </div>
+            </div>
+
+            <div class="glass-section">
+                <p class="section-title">📝 Record Transaction</p>
+                <div class="i-grid">
+                    <input type="date" id="tanggalTransaksi" placeholder="Tanggal">
+                    <p class="day-preview" id="dayPreview">-</p>
+                    <input type="text" id="keterangan" placeholder="Keterangan transaksi" autocomplete="off">
+                    <input type="number" id="nominal" placeholder="Nominal (Rp)" inputmode="numeric" enterkeyhint="done">
+                    <select id="sumber"><option value="cash">💵 Cash</option><option value="digital">📱 Digital</option></select>
+                    <select id="tipe"><option value="keluar">🔻 Keluar</option><option value="masuk">🔺 Masuk</option></select>
+                </div>
+                <button class="btn-action-main btn-primary" onclick="tambahData()">✅ RECORD TRANSACTION</button>
+            </div>
+
+            <div class="glass-section">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                    <p class="section-title" style="margin-bottom:0;">📜 Riwayat Transaksi</p>
+                    <input type="text" id="searchHistory" placeholder="🔍 Cari..." style="width:140px; padding:8px 12px; font-size:0.85rem;">
+                </div>
+                <ul id="daftar" class="transaction-list"></ul>
+                <div style="text-align:center; margin-top:12px;">
+                    <button class="btn-export" onclick="exportData()">💾 Export Data</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2: DIGITAL (ENHANCED) -->
+        <div id="page-digital" class="page">
+            <div class="brand-header"><div class="brand">📱 DIGITAL<span>FLOW</span></div></div>
+            
+            <div class="premium-card digital-variant">
+                <p class="card-label">💳 Digital Assets</p>
+                <h1 id="saldoDigitalHalaman" class="animate-number">Rp 0</h1>
+                <p class="card-subtitle">Saldo tersedia untuk transaksi digital</p>
+            </div>
+
+            <div class="premium-card digital-summary-card">
+                <div class="card-header-row">
+                    <p class="card-label">💳 Aliran Digital</p>
+                    <p class="card-day" id="digitalDayName">-</p>
+                </div>
+                <p class="card-date" id="digitalDate">-</p>
+                <div class="digital-stats">
+                    <div class="digital-item"><span class="digital-label">💰 Pemasukan Digital</span><p id="digitalMasuk" class="digital-value positive animate-number">+Rp 0</p></div>
+                    <div class="digital-item"><span class="digital-label">💸 Pengeluaran Digital</span><p id="digitalKeluar" class="digital-value negative animate-number">-Rp 0</p></div>
+                    <div class="digital-item total"><span class="digital-label">📊 Saldo Digital Tanggal Ini</span><p id="digitalNet" class="digital-value animate-number">Rp 0</p></div>
+                </div>
+            </div>
+
+            <!-- ✅ FORM DIGITAL LENGKAP -->
+            <div class="glass-section">
+                <p class="section-title">📱 Record Digital Transaction</p>
+                <div class="i-grid">
+                    <input type="date" id="digitalTanggal" placeholder="Tanggal">
+                    <p class="day-preview" id="digitalDayPreview">-</p>
+                    <input type="text" id="digitalKeterangan" placeholder="Keperluan / Keterangan" autocomplete="off">
+                    <input type="number" id="digitalNominal" placeholder="Nominal (Rp)" inputmode="numeric" enterkeyhint="done">
+                    <select id="digitalTipe">
+                        <option value="masuk">🔺 Pemasukan</option>
+                        <option value="keluar">🔻 Pengeluaran</option>
+                    </select>
+                </div>
+                <button class="btn-action-main btn-digital" onclick="prosesDigitalTransaction()">💳 SIMPAN TRANSAKSI DIGITAL</button>
+            </div>
+
+            <div class="glass-section">
+                <p class="section-title">📈 Digital History</p>
+                <ul id="digitalHistory" class="transaction-list"></ul>
+            </div>
+        </div>
+
+        <!-- PAGE 3: VAULT SAVINGS -->
+        <div id="page-tabungan" class="page">
+            <div class="brand-header"><div class="brand">🏦 SAVINGS<span>VAULT</span></div></div>
+            
+            <div class="premium-card vault-overview">
+                <p class="card-label">🎯 Total Saved in Vault</p>
+                <h1 id="totalVaultSaved" class="animate-number">Rp 0</h1>
+                <p class="card-subtitle" id="vaultPlansCount">0 Active Goals</p>
+            </div>
+
+            <div class="glass-section">
+                <p class="section-title">✨ Create New Target</p>
+                <div class="i-grid">
+                    <input type="text" id="inputNamaGoal" placeholder="Nama Rencana (ex: Liburan)" autocomplete="off">
+                    <input type="number" id="inputTargetNominal" placeholder="Target (Rp)" inputmode="numeric" enterkeyhint="done">
+                </div>
+                <button class="btn-action-main btn-vault" onclick="createVaultPlan()">🎁 CREATE NEW PLAN</button>
+            </div>
+
+            <div id="vaultPlansContainer"></div>
+
+            <div class="glass-section" id="areaNabungVault" style="display:none;">
+                <p class="section-title">💰 Manage Savings</p>
+                <select id="pilihPlan" class="full-input" style="margin-bottom:12px; width:100%;"></select>
+                <input type="number" id="nominalNabung" placeholder="Nominal (Rp)" style="margin-bottom:12px; width:100%;" inputmode="numeric" enterkeyhint="done">
+                <div class="btn-group-row" style="display:flex; gap:10px;">
+                    <button class="btn-in" onclick="prosesTabungan('masuk')" style="flex:1;">🔒 SECURE</button>
+                    <button class="btn-out" onclick="prosesTabungan('keluar')" style="flex:1;">🔓 RELEASE</button>
+                </div>
+                <p class="vault-hint" style="font-size:0.75rem; color:var(--text-dim); margin-top:8px; text-align:center;">⚠️ Release tidak boleh melebihi saldo vault</p>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('harian', event)">
+                <span class="nav-icon">🏠</span>
+                <span>Main</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('digital', event)">
+                <span class="nav-icon">📱</span>
+                <span>Digital</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tabungan', event)">
+                <span class="nav-icon">🏦</span>
+                <span>Vault</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
